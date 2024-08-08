@@ -16,10 +16,8 @@
   <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
   <!-- iCheck -->
   <link rel="stylesheet" href="plugins/iCheck/square/blue.css">
-  
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-  
 </head>
 <body class="hold-transition register-page">
 <div class="register-box">
@@ -30,21 +28,21 @@
   <div class="register-box-body">
     <p class="login-box-msg">Register a new membership</p>
 
-    <form action="../../index.html" method="post">
+    <form id="registerForm">
       <div class="form-group has-feedback">
-        <input type="text" class="form-control" placeholder="Full name">
+        <input type="text" id="fullName" class="form-control" placeholder="Full name" required>
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="email" class="form-control" placeholder="Email">
+        <input type="email" id="email" class="form-control" placeholder="Email" required>
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="password" class="form-control" placeholder="Password">
+        <input type="password" id="password" class="form-control" placeholder="Password" required>
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="password" class="form-control" placeholder="Retype password">
+        <input type="password" id="retypePassword" class="form-control" placeholder="Retype password" required>
         <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
       </div>
       <div class="row">
@@ -62,8 +60,6 @@
         <!-- /.col -->
       </div>
     </form>
-
-
   </div>
   <!-- /.form-box -->
 </div>
@@ -82,6 +78,79 @@
       radioClass: 'iradio_square-blue',
       increaseArea: '20%' /* optional */
     });
+  });
+
+  document.getElementById('registerForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const fullName = document.getElementById('fullName').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const retypePassword = document.getElementById('retypePassword').value;
+
+    // Validate passwords
+    if (password !== retypePassword) {
+      alert('Passwords do not match!');
+      return;
+    }
+
+    // Sheety API endpoints
+    const sheetyLoginEndpoint = 'https://api.sheety.co/6baff91e1a861c8b62176868e45b8285/sheety/login';
+
+    // Function to check if username already exists
+    function checkUsernameExists(username) {
+      return fetch(sheetyLoginEndpoint)
+        .then(response => response.json())
+        .then(data => {
+          return data.login.some(user => user.username === username);
+        });
+    }
+
+    // Function to add a new user
+    function addUser(data) {
+      return fetch(sheetyLoginEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json());
+    }
+
+    // Check if username exists
+    checkUsernameExists(fullName)
+      .then(exists => {
+        if (exists) {
+          alert('Username already exists. Please choose a different one.');
+        } else {
+          // Prepare data for Sheety
+          const newUser = {
+            login: {
+              username: fullName,
+              password: password,
+              email: email,
+              role: 'user' // Default role
+            }
+          };
+
+          // Add new user
+          addUser(newUser)
+            .then(json => {
+              console.log(json.login); // Check the response in the console
+              alert('Registration successful!');
+              window.location.href = 'index.html'; // Redirect after successful registration
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              alert('Registration failed.');
+            });
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Error checking username availability.');
+      });
   });
 </script>
 </body>

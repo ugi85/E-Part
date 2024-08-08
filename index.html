@@ -17,11 +17,47 @@
   <!-- iCheck -->
   <link rel="stylesheet" href="plugins/iCheck/square/blue.css">
   
-  <link rel="stylesheet" href="/path/to/bower_components/bootstrap/dist/css/bootstrap.min.css">
-
-
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+  
+  <style>
+    /* Custom styles for login page */
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .login-box {
+      width: 360px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background: #fff;
+    }
+    .login-logo a {
+      color: #444;
+      text-decoration: none;
+    }
+    .login-box-msg {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 300;
+      text-align: center;
+    }
+    .form-group.has-feedback input {
+      border-radius: 4px;
+    }
+    .btn-flat {
+      border-radius: 4px;
+    }
+    .message {
+      color: red;
+      text-align: center;
+    }
+  </style>
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
@@ -32,20 +68,20 @@
   <div class="login-box-body">
     <p class="login-box-msg">Sign in to start your session</p>
 
-    <form action="../../index2.html" method="post">
+    <form id="loginForm">
       <div class="form-group has-feedback">
-        <input type="email" class="form-control" placeholder="Email">
-        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+        <input type="text" id="username" class="form-control" placeholder="Username" required>
+        <span class="glyphicon glyphicon-user form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="password" class="form-control" placeholder="Password">
+        <input type="password" id="password" class="form-control" placeholder="Password" required>
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
       <div class="row">
         <div class="col-xs-8">
           <div class="checkbox icheck">
             <label>
-              <a href="register.html" class="text-center">Register Here !</a>
+              <a href="/pages/examples/register.html" class="text-center">Register Here !</a>
             </label>
           </div>
         </div>
@@ -55,6 +91,7 @@
         </div>
         <!-- /.col -->
       </div>
+      <div id="message" class="message"></div>
     </form>
 
   </div>
@@ -75,6 +112,35 @@
       radioClass: 'iradio_square-blue',
       increaseArea: '20%' /* optional */
     });
+  });
+
+  document.getElementById('loginForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Mencegah form dari pengiriman default
+
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    fetch('https://api.sheety.co/6baff91e1a861c8b62176868e45b8285/sheety/login') // Ganti dengan URL Sheety kamu
+      .then(response => response.json())
+      .then(data => {
+        const users = data.login; // Sesuaikan dengan struktur data Sheety
+        let isValid = false;
+        users.forEach(user => {
+          if (user.username === username && user.password === password) {
+            isValid = true;
+            // Redirect atau lakukan tindakan setelah login sukses
+            alert('Login successful!');
+            window.location.href = 'main.html'; // Ganti dengan halaman yang sesuai
+          }
+        });
+        if (!isValid) {
+          document.getElementById('message').textContent = 'Invalid username or password.';
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('message').textContent = 'An error occurred.';
+      });
   });
 </script>
 </body>

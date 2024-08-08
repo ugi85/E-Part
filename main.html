@@ -292,7 +292,7 @@
                   <a href="#" class="btn btn-default btn-flat">Profile</a>
                 </div>
                 <div class="pull-right">
-                  <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                  <a href="#" id="logoutButton" class="btn btn-default btn-flat">Sign out</a>
                 </div>
               </li>
             </ul>
@@ -1267,9 +1267,27 @@
 <script src="dist/js/pages/dashboard.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
+<script src="plugins/iCheck/icheck.min.js"></script>
 <script>
-  // Redirect to login.html
-  window.location.href = 'login.html';
+  $(function () {
+    $('input').iCheck({
+      checkboxClass: 'icheckbox_square-blue',
+      radioClass: 'iradio_square-blue',
+      increaseArea: '20%' /* optional */
+    });
+
+    document.getElementById('logoutButton').addEventListener('click', function(event) {
+      event.preventDefault(); // Mencegah link default
+
+      // Menghapus data sesi atau token di sini
+      // Misalnya, jika menggunakan localStorage:
+      localStorage.removeItem('userToken'); // Ganti dengan nama token yang digunakan
+
+      // Arahkan pengguna kembali ke halaman login
+      window.location.href = 'index.html'; // Ganti dengan URL halaman login yang sesuai
+    });
+  });
 </script>
+
 </body>
 </html>

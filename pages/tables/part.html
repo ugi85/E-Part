@@ -539,19 +539,24 @@
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th>Username</th>
-                  <th>Email</th>
-                  <th>Role</th>
+                  <th>Code Part</th>
+                  <th>Sparepart</th>
+                  <th>Specification</th>
+                  <th>Machine</th>
+                  <th>Maker</th>
+                  <th>Class PArt</th>
+                  <th>Stock</th>
+                  <th>Harga</th>
                 </tr>
                 </thead>
                 <tbody id="userTableBody">
                   <!-- Data will be inserted here -->
                 </tbody>
-                
               </table>
             </div>
             <!-- /.box-body -->
           </div>
+          
           <!-- /.box -->
         </div>
         <!-- /.col -->
@@ -783,29 +788,34 @@
 <!-- page script -->
 <script>
   $(function () {
-    // Initialize DataTable
+    // Initialize DataTable for example1
     $('#example1').DataTable();
   });
 
   $(document).ready(function() {
-    // Endpoint Sheety
-    const sheetyEndpoint = 'https://api.sheety.co/6baff91e1a861c8b62176868e45b8285/sheety/login';
+    // Endpoint Sheety for part data
+    const sheetyEndpointPart = 'https://api.sheety.co/6baff91e1a861c8b62176868e45b8285/sheety/part';
 
-    // Fetch data from Sheety
-    function fetchData() {
-      $.get(sheetyEndpoint, function(data) {
-        const users = data.login; // Adjust according to your JSON structure
+    // Fetch part data
+    function fetchPartData() {
+      $.get(sheetyEndpointPart, function(data) {
+        const parts = data.part; // Adjust according to your JSON structure
 
         // Clear the table body
-        $('#userTableBody').empty();
+        $('#userTableBody').empty(); // Use a different tbody or clear other existing content if needed
 
-        // Populate the table with user data
-        users.forEach(user => {
+        // Populate the table with part data
+        parts.forEach(part => {
           $('#userTableBody').append(`
             <tr>
-              <td>${user.username}</td>
-              <td>${user.email}</td>
-              <td>${user.role}</td>
+              <td>${part.codePart}</td> <!-- Adjust according to your data -->
+              <td>${part.sparepart}</td> <!-- Adjust according to your data -->
+              <td>${part.specification}</td> <!-- Adjust according to your data -->
+              <td>${part.machine}</td> <!-- Adjust according to your data -->
+              <td>${part.maker}</td> <!-- Adjust according to your data -->
+              <td>${part.classPart}</td> <!-- Adjust according to your data -->
+              <td>${part.stock}</td> <!-- Adjust according to your data -->
+              <td>${part.harga}</td> <!-- Adjust according to your data -->
             </tr>
           `);
         });
@@ -813,10 +823,11 @@
         // Re-initialize DataTables to ensure it recognizes the new rows
         $('#example1').DataTable().clear().rows.add($('#userTableBody').find('tr')).draw();
       }).fail(function() {
-        alert('Failed to fetch data.');
+        alert('Failed to fetch part data.');
       });
     }
 
-    fetchData(); // Call the function to fetch and display data
+    fetchPartData(); // Call the function to fetch and display part data
   });
 </script>
+

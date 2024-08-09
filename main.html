@@ -8,6 +8,9 @@
   <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
   <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
   <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
+ 
+
+  
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -24,7 +27,57 @@
       <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
         <span class="sr-only">Toggle navigation</span>
       </a>
+
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+      
+          <!-- User Account: style can be found in dropdown.less -->
+          <li class="dropdown user user-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+              <span class="hidden-xs">Alexander Pierce</span>
+            </a>
+            <ul class="dropdown-menu">
+              <!-- User image -->
+              <li class="user-header">
+                <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+
+                <p>
+                  Alexander Pierce - Web Developer
+                  <small>Member since Nov. 2012</small>
+                </p>
+              </li>
+              <!-- Menu Body -->
+              <li class="user-body">
+                <div class="row">
+                  <div class="col-xs-4 text-center">
+                    <a href="#">Followers</a>
+                  </div>
+                  <div class="col-xs-4 text-center">
+                    <a href="#">Sales</a>
+                  </div>
+                  <div class="col-xs-4 text-center">
+                    <a href="#">Friends</a>
+                  </div>
+                </div>
+                <!-- /.row -->
+              </li>
+              <!-- Menu Footer-->
+              <li class="user-footer">
+                <div class="pull-left">
+                  <a href="#" class="btn btn-default btn-flat">Profile</a>
+                </div>
+                <div class="pull-right">
+                  <a href="#" id="logoutBtn" class="btn btn-default btn-flat">Sign out</a>
+                </div>                
+              </li>
+            </ul>
+          </li>
+        
+        </ul>
+      </div>
     </nav>
+    
   </header>
 
   <!-- Left side column -->
@@ -74,7 +127,52 @@
       $('#main-content').load(contentUrl);
     });
   });
+
+  $(document).ready(function() {
+  $('.sidebar-menu a').click(function(event) {
+    event.preventDefault(); // Prevent default link behavior
+    var contentUrl = $(this).data('content'); // Get URL from data attribute
+
+    // Show loading message
+    $('#main-content').html('<p>Loading...</p>');
+
+    // Load the content
+    $('#main-content').load(contentUrl, function(response, status, xhr) {
+      if (status == "error") {
+        $('#main-content').html('<p>Error loading content: ' + xhr.status + ' ' + xhr.statusText + '</p>');
+      }
+    });
+  });
+});
+
 </script>
+
+<script>
+  // Cek apakah pengguna sudah login
+  if (!sessionStorage.getItem('isLoggedIn')) {
+    // Jika belum login, alihkan ke halaman login
+    window.location.href = 'login.html'; // Ganti dengan halaman login
+  }
+</script>
+
+<script>
+document.getElementById('logoutBtn').addEventListener('click', function(event) {
+  event.preventDefault(); // Mencegah perilaku default link
+
+  // Hapus status login dari sessionStorage
+  sessionStorage.removeItem('isLoggedIn');
+
+  // Redirect ke halaman login
+  window.location.href = 'login.html'; // Ganti dengan URL halaman login Anda
+});
+
+// Cek apakah pengguna sudah login
+if (!sessionStorage.getItem('isLoggedIn')) {
+  // Jika belum login, alihkan ke halaman login
+  window.location.href = 'login.html'; // Ganti dengan halaman login Anda
+}
+</script>
+
 
 </body>
 </html>

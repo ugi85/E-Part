@@ -128,6 +128,8 @@
         users.forEach(user => {
           if (user.username === username && user.password === password) {
             isValid = true;
+            // Simpan status login ke sessionStorage
+            sessionStorage.setItem('isLoggedIn', true);
             // Redirect atau lakukan tindakan setelah login sukses
             alert('Login successful!');
             window.location.href = 'main.html'; // Ganti dengan halaman yang sesuai
